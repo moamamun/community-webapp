@@ -11,6 +11,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public void signup(@RequestBody RegisterRequest registerRequest) {
-        
+
     }
 }
