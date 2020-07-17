@@ -1,6 +1,7 @@
 package com.reddit.clone.service;
 
 import com.reddit.clone.controller.RegisterRequest;
+import com.reddit.clone.model.NotificationEmail;
 import com.reddit.clone.model.User;
 import com.reddit.clone.model.VerificationToken;
 import com.reddit.clone.repository.UserRepository;
@@ -21,6 +22,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final MailService mailService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -34,6 +36,8 @@ public class AuthService {
         userRepository.save(user);
         
         String token = generateVerificationToken(user);
+        mailService.sendMail(new NotificationEmail("Please Activate your Account", user.getEmail(),
+                "Thank you " + "http://localhost:8080/api/auth/accountVerification/" + token));
     }
 
     private String generateVerificationToken(User user) {
