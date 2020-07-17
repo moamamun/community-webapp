@@ -1,4 +1,4 @@
-package com.reddit.clone.controller;
+package com.reddit.clone.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
