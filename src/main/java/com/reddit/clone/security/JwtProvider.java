@@ -15,7 +15,7 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 import static io.jsonwebtoken.Jwts.parser;
-import static java.util.Date.from;
+
 
 @Service
 public class JwtProvider {
@@ -26,16 +26,25 @@ public class JwtProvider {
     public void init() {
         try {
             keyStore = KeyStore.getInstance("JKS");
+
+            // getting the inputstream from the keystore file
             InputStream resourceAsStream = getClass().getResourceAsStream("/clone.jks");
+
+            //load input and password
             keyStore.load(resourceAsStream, "secret".toCharArray());
+
+            //Read the private key from the keystore and pass it to the JWT class to sign our toekn.
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
             throw new SpringRedditException("Exception occurred while loading keystore");
         }
 
     }
 
+
     public String generateToken(Authentication authentication) {
         User principal = (User) authentication.getPrincipal();
+
+        // Use keystore(symmetric encryption) to sign the web token (privatekey)
         return Jwts.builder()
                 .setSubject(principal.getUsername())
                 .signWith(getPrivateKey())
@@ -49,7 +58,7 @@ public class JwtProvider {
             throw new SpringRedditException("Exception occured while retrieving public key from keystore");
         }
     }
-
+    // Validate JWT Token
     public boolean validateToken(String jwt) {
         parser().setSigningKey(getPublickey()).parseClaimsJws(jwt);
         return true;

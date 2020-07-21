@@ -74,9 +74,12 @@ public class AuthService {
         userRepository.save(user);
     }
 
+    // Create UserPassword auth token and use AuthManager to perform login
     public AuthenticationResponse login(LoginRequest loginRequest) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword()));
+
+        //Storing the auth object
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
         return new AuthenticationResponse(token, loginRequest.getUsername());
