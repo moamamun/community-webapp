@@ -1,6 +1,6 @@
 package com.reddit.clone.controller;
 
-import com.reddit.clone.dto.SubredditDTO;
+import com.reddit.clone.dto.SubredditDto;
 import com.reddit.clone.service.SubredditService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,15 +19,22 @@ public class SubredditController {
     private final SubredditService subredditService;
 
     @PostMapping
-    public ResponseEntity<SubredditDTO> createSubreddit(@RequestBody SubredditDTO subredditDTO) {
+    public ResponseEntity<SubredditDto> createSubreddit(@RequestBody SubredditDto subredditDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(subredditService.save(subredditDTO));
     }
 
     @GetMapping
-    public ResponseEntity<List<SubredditDTO>> getAllSubreddit() {
+    public ResponseEntity<List<SubredditDto>> getAllSubreddit() {
     return ResponseEntity
             .status(HttpStatus.OK)
             .body(subredditService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SubredditDto> getSubreddit(@PathVariable Long id) {
+        return ResponseEntity
+                .status((HttpStatus.OK))
+                .body(subredditService.getSubreddit(id));
     }
 }
