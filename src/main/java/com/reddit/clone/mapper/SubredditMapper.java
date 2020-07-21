@@ -1,6 +1,6 @@
 package com.reddit.clone.mapper;
 
-import com.reddit.clone.dto.SubredditDTO;
+import com.reddit.clone.dto.SubredditDto;
 import com.reddit.clone.model.Post;
 import com.reddit.clone.model.Subreddit;
 import org.mapstruct.InheritInverseConfiguration;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface SubredditMapper {
 
     @Mapping(target = "numberOfPosts", expression = "java(mapPosts(subreddit.getPosts()))")
-    SubredditDTO mapSubredditToDto(Subreddit subreddit);
+    SubredditDto mapSubredditToDto(Subreddit subreddit);
 
     default Integer mapPosts(List<Post> numberOfPosts) {
         return numberOfPosts.size();
@@ -21,5 +21,5 @@ public interface SubredditMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "posts", ignore = true)
-    Subreddit mapDtoToSubreddit(SubredditDTO subredditDto);
+    Subreddit mapDtoToSubreddit(SubredditDto subredditDto);
 }
