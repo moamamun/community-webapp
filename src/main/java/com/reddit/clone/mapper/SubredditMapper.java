@@ -9,16 +9,18 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel  = "spring")
+@Mapper(componentModel = "spring")
 public interface SubredditMapper {
 
+    //MaptoDTO takes subreddit object as input and returns subredditdto object
     @Mapping(target = "numberOfPosts", expression = "java(mapPosts(subreddit.getPosts()))")
     SubredditDto mapSubredditToDto(Subreddit subreddit);
 
-    default Integer mapPosts(List<Post> numberOfPosts) {
-        return numberOfPosts.size();
-    }
+    //takes list of  posts as input and returns the size
+    default Integer mapPosts(List<Post> numberOfPosts) { return numberOfPosts.size(); }
 
+    //Create Mappings Similar to mapsubreddit to dto method,
+    //instead create mappings from subreddit DTO to subreddit entity
     @InheritInverseConfiguration
     @Mapping(target = "posts", ignore = true)
     Subreddit mapDtoToSubreddit(SubredditDto subredditDto);
