@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        //find userdetails inside securitycontext and will fulfil our request else exceptiopn
         filterChain.doFilter(request, response);
     }
 
