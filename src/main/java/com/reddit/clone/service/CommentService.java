@@ -11,7 +11,11 @@ import com.reddit.clone.repository.CommentRepository;
 import com.reddit.clone.repository.PostRepository;
 import com.reddit.clone.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,5 +44,21 @@ public class CommentService {
     //passing notification email (passing subject line followed by email and message of post author)
     private void sendCommentNotification(String message, User user) {
         mailService.sendMail(new NotificationEmail(user.getUsername() + " Comment on your post", user.getEmail(), message));
+    }
+
+    public List<CommentsDto> getAllCommentsForPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId.toString()));
+        return commentRepository.findByPost(post)
+                .stream()
+                .map(commentMapper::mapToDto).collect(Collectors.toList());
+    }
+
+    public List<CommentsDto> getAllCommentsForUser(String userName) {
+        User user = userRepository.findByUsername(userName)
+                .orElseThrow(() -> new UsernameNotFoundException(userName));
+        return commentRepository.findAllByUser(user)
+                .stream()
+                .map(commentMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 }
