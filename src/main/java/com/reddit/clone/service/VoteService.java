@@ -9,6 +9,7 @@ import com.reddit.clone.repository.PostRepository;
 import com.reddit.clone.repository.VoteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,15 +23,17 @@ public class VoteService {
     private final PostRepository postRepository;
     private final AuthService authService;
 
+    @Transactional
     public void vote(VoteDto voteDto) {
         Post post = postRepository.findById(voteDto.getPostId())
-                .orElseThrow(() -> new PostNotFoundException("Post Not Found With ID - " + voteDto.getPostId()));
+                .orElseThrow(() -> new PostNotFoundException("Post Not Found with ID - " + voteDto.getPostId()));
         Optional<Vote> voteByPostAndUser = voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post, authService.getCurrentUser());
         //can't vote again for the same post
-        if(voteByPostAndUser.isPresent() &&
-        voteByPostAndUser.get().getVoteType()
-                .equals(voteDto.getVoteType())) {
-            throw new SpringRedditException("You have already " + voteDto.getVoteType() + "d for this post");
+        if (voteByPostAndUser.isPresent() &&
+                voteByPostAndUser.get().getVoteType()
+                        .equals(voteDto.getVoteType())) {
+            throw new SpringRedditException("You have already "
+                    + voteDto.getVoteType() + "'d for this post");
         }
         if (UPVOTE.equals(voteDto.getVoteType())) {
             post.setVoteCount(post.getVoteCount() + 1);
