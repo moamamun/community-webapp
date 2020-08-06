@@ -24,6 +24,7 @@ public class SwaggerConfig {
                 .apiInfo(getApiInfo());
     }
 
+    // Providing details of our api
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
                 .title("Clone API")
